@@ -9,7 +9,7 @@ Adafruit_PCD8544 screen = Adafruit_PCD8544(7,6,5,3);
 const char screen_height = screen.height();
 const char screen_width = screen.width();
 
-#define MAX_SNAKE_LENGTH 500
+#define MAX_SNAKE_LENGTH 300
 
 #define UP 1
 #define DOWN 3
@@ -20,10 +20,10 @@ const char screen_width = screen.width();
 
 #define BOARD_TOP 7
 
-int buttonDown = 8;
-int buttonRight = 9;
-int buttonUp = 10;
-int buttonLeft = 11;
+char buttonDown = 8;
+char buttonRight = 9;
+char buttonUp = 10;
+char buttonLeft = 11;
 
 char snake[MAX_SNAKE_LENGTH][2];
 char CURRENT_SNAKE_LENGTH;
@@ -61,7 +61,6 @@ void setup()
   
 
   show_menu();
-
 }
 
 void draw_board()
@@ -111,12 +110,12 @@ void init_snake()
 
 void loop()
 { 
-
+  
 }
 
 void start_game()
 {
-  if( !snake_is_dead  )
+  while(!snake_is_dead)
   {
     draw_board();
   
@@ -129,6 +128,7 @@ void start_game()
     if( right == 0 ) if( snakeDirection != LEFT ) snakeDirection = RIGHT;
     if( left == 0 ) if( snakeDirection != RIGHT ) snakeDirection = LEFT;
     if( up == 0 ) if( snakeDirection != DOWN ) snakeDirection = UP;
+    Serial.println("MOVE");
   
     move_snake();
     check_snake_food();
@@ -206,7 +206,7 @@ void move_snake()
   
   screen.display();
   
-  delay(100);
+  delay(20);
 }
 
 void show_food()
@@ -293,7 +293,10 @@ void check_snake_food()
      
      score += 5;
      refresh_high_score();
-   }
+     Serial.println("IA MANCAREA!");  
+ }
+   
+   
 }
 
 boolean check_if_snake_is_dead()
