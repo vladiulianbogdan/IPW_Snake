@@ -101,6 +101,14 @@ void refresh_high_score()
 
 void init_snake()
 {
+  foodIsOnScreen = 0;
+  snake_is_dead = 0;
+  CURRENT_SNAKE_LENGTH = 0;
+  score = 0;
+  snakeDirection = 2;
+  current_food_x = -1;
+  current_food_y = -1;
+  
   for(int i=0;i<MAX_SNAKE_LENGTH;i++)
   {
     snake[i][0] = -1;
@@ -111,6 +119,7 @@ void init_snake()
   { 
       snake[i][0] = i + 10;
       snake[i][1] = screen_height / 2;
+      CURRENT_SNAKE_LENGTH++;
   }
   
   for(int i=0;i<MAX_SNAKE_LENGTH;i++)
@@ -132,10 +141,7 @@ void start_game()
   while(!snake_is_dead)
   {  
     int a = analogRead(0);
-    Serial.print("Before :");
-    Serial.println(a,DEC);
     snake_speed = map(a, 0, 1023, 25, 255);
-    Serial.println(snake_speed,DEC);
     draw_board();
   
     int down = digitalRead(buttonDown);
@@ -159,11 +165,15 @@ void start_game()
        
        screen.println("Game over!");
        screen.display();
+       delay(2000);
+       show_menu();
+       break;
        
        snake_is_dead = 1;
     }
   }
 }
+
 
 void move_snake()
 {
@@ -229,6 +239,7 @@ void move_snake()
 
 void show_food()
 {
+  Serial.println("SHOW FOOD");
   char food_x = 0;
   char food_y = 0;
   
