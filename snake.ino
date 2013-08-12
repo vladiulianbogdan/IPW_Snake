@@ -28,6 +28,8 @@ char buttonLeft = 11;
 char snake[MAX_SNAKE_LENGTH][2];
 char CURRENT_SNAKE_LENGTH;
 
+int snake_speed = 100;
+
 //snake direction
 //       N 1
 //  E4         V 2
@@ -59,8 +61,19 @@ void setup()
   screen.begin();
   screen.setContrast(50);
   
-
+  init_random_system();
+  
   show_menu();
+}
+
+void init_random_system()
+{
+  int randSeed = 0;
+  for(int i=0;i<10;i++)
+  {
+    randSeed = analogRead(1);
+  }
+  randomSeed(randSeed);
 }
 
 void draw_board()
@@ -80,9 +93,10 @@ void refresh_high_score()
   screen.print(score);
   screen.setCursor(screen_width/2,0);
   screen.print("HS:");
-  screen.print(EEPROM.read(0));
+  int last_score = EEPROM.read(0);
+  screen.print( last_score );
+  if( score > last_score ) EEPROM.write(0,score);
   screen.display();
-  
 }
 
 void init_snake()
@@ -110,13 +124,18 @@ void init_snake()
 
 void loop()
 { 
-  
+
 }
 
 void start_game()
 {
   while(!snake_is_dead)
-  {
+  {  
+    int a = analogRead(0);
+    Serial.print("Before :");
+    Serial.println(a,DEC);
+    snake_speed = map(a, 0, 1023, 25, 255);
+    Serial.println(snake_speed,DEC);
     draw_board();
   
     int down = digitalRead(buttonDown);
@@ -128,7 +147,6 @@ void start_game()
     if( right == 0 ) if( snakeDirection != LEFT ) snakeDirection = RIGHT;
     if( left == 0 ) if( snakeDirection != RIGHT ) snakeDirection = LEFT;
     if( up == 0 ) if( snakeDirection != DOWN ) snakeDirection = UP;
-    Serial.println("MOVE");
   
     move_snake();
     check_snake_food();
@@ -206,7 +224,7 @@ void move_snake()
   
   screen.display();
   
-  delay(20);
+  delay(snake_speed);
 }
 
 void show_food()
@@ -222,8 +240,8 @@ void show_food()
     {
       ok = 1;
       
-      food_x = rand() % 38 + BOARD_TOP + 2;
-      food_y = rand() % 80 + 2;
+      food_x = random(9, 38);
+      food_y = random(2, 80);
   
       Serial.print("Food x = ");
       Serial.println(food_x, DEC);
@@ -291,9 +309,21 @@ void check_snake_food()
         foodIsOnScreen = 0;
      }
      
-     score += 5;
+     if( snake_speed >= 200 )
+         score += 1;
+     else if( snake_speed > 100 && snake_speed < 200 )
+       {
+         score += 3; 
+       }
+     else if( snake_speed > 50 && snake_speed < 100 )
+     {
+       score += 4;
+     }
+     else if( snake_speed < 50 )
+     {
+       score += 5;
+     }
      refresh_high_score();
-     Serial.println("IA MANCAREA!");  
  }
    
    

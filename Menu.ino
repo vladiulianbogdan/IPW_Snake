@@ -41,21 +41,21 @@ void show_menu()
     {
       option_menu_select_down();
       delay(500);
-      break;
     }
     else if( bUp == 0 )
     {
       option_menu_select_up();
       delay(500);
-      break;
     }
   }
 }
 
 void option_menu_select_up()
 {
-  if( select_circle_y > 4 )
+  Serial.println("Select up");
+  if( select_circle_y >= 4 )
   {
+    Serial.println("In if");
     screen.drawCircle(select_circle_x, select_circle_y, 1, WHITE);
     screen.display();
     select_circle_y -= TEXT_HEIGHT;
@@ -68,8 +68,10 @@ void option_menu_select_up()
 
 void option_menu_select_down()
 {
-    if( select_circle_y < 14 )
+    Serial.println("Select down");
+    if( select_circle_y <= 14 )
     {
+      Serial.println("Select down");
       screen.drawCircle(select_circle_x, select_circle_y, 1, WHITE);
       screen.display();
       select_circle_y += TEXT_HEIGHT;
