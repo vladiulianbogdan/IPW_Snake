@@ -20,10 +20,10 @@ const char screen_width = screen.width();
 
 #define BOARD_TOP 7
 
-char buttonDown = 8;
+char buttonDown = 11;
 char buttonRight = 9;
 char buttonUp = 10;
-char buttonLeft = 11;
+char buttonLeft = 8;
 
 char snake[MAX_SNAKE_LENGTH][2];
 char CURRENT_SNAKE_LENGTH;
@@ -50,9 +50,13 @@ void setup()
 { 
   //initialize buttons
   pinMode(buttonDown,INPUT);
+  digitalWrite(buttonDown,HIGH);
   pinMode(buttonRight,INPUT);
+  digitalWrite(buttonRight,HIGH);
   pinMode(buttonLeft,INPUT);
-  pinMode(buttonRight,INPUT);
+  digitalWrite(buttonLeft,HIGH);
+  pinMode(buttonUp,INPUT);
+  digitalWrite(buttonUp,HIGH);
   
   Serial.begin(9600);
   screen.display();
@@ -133,7 +137,7 @@ void init_snake()
 
 void loop()
 { 
-
+  
 }
 
 void start_game()
@@ -162,7 +166,7 @@ void start_game()
     {
        screen.clearDisplay();
        screen.display();
-       
+       screen.setCursor(12,10);
        screen.println("Game over!");
        screen.display();
        delay(2000);
@@ -239,7 +243,6 @@ void move_snake()
 
 void show_food()
 {
-  Serial.println("SHOW FOOD");
   char food_x = 0;
   char food_y = 0;
   
@@ -253,26 +256,24 @@ void show_food()
       
       food_x = random(9, 38);
       food_y = random(2, 80);
-  
-      Serial.print("Food x = ");
-      Serial.println(food_x, DEC);
-      Serial.print("Food y = ");
-      Serial.println(food_y, DEC);
-  
-      screen.fillCircle(food_y, food_x, FOOD_RADIUS, BLACK);
-      screen.display();
     
       for(int i=0;i<CURRENT_SNAKE_LENGTH;i++)
       {
         if( snake[i][0] == food_x && snake[i][1] == food_y ) ok = 0; 
       }
       
-      if( ok == 1 ) break;
+      if( ok == 1 )
+      {
+        screen.fillCircle(food_y, food_x, FOOD_RADIUS, BLACK);
+        screen.display();
+        break;
+      }
     }
     
     foodIsOnScreen = 1;
     current_food_x = food_y;
     current_food_y = food_x;
+    delay(100);
   }
 }
 

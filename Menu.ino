@@ -2,6 +2,7 @@
 #define TEXT_HEIGHT 10
 #define NEW_GAME 1
 #define HIGHSCORE 2
+#define TOP_MENU 15
 
 char select_circle_x = MENU_RIGHT_COORD - 5;
 char select_circle_y = 4;
@@ -11,10 +12,14 @@ char option_selected = NEW_GAME;
 void show_menu()
 {
   screen.clearDisplay();
-  screen.setCursor(MENU_RIGHT_COORD,0);
-  screen.drawCircle( select_circle_x, select_circle_y ,1,BLACK);
+  screen.setCursor(10,0);
+  screen.setTextSize(2);
+  screen.println("SNAKE");
+  screen.setTextSize(1);
+  screen.setCursor(MENU_RIGHT_COORD,TOP_MENU);
+  screen.drawCircle( select_circle_x, select_circle_y + TOP_MENU ,1,BLACK);
   screen.println("New game");
-  screen.setCursor(MENU_RIGHT_COORD,TEXT_HEIGHT);
+  screen.setCursor(MENU_RIGHT_COORD,TEXT_HEIGHT + TOP_MENU);
   screen.println("Highscore");
   screen.display();
   
@@ -52,15 +57,12 @@ void show_menu()
 
 void option_menu_select_up()
 {
-  Serial.println("Select up");
   if( select_circle_y >= 4 )
   {
-    Serial.println("In if");
-    screen.drawCircle(select_circle_x, select_circle_y, 1, WHITE);
+    screen.drawCircle(select_circle_x, select_circle_y + TOP_MENU, 1, WHITE);
     screen.display();
     select_circle_y -= TEXT_HEIGHT;
-    Serial.println(select_circle_y,DEC);
-    screen.drawCircle( select_circle_x, select_circle_y, 1,BLACK);
+    screen.drawCircle( select_circle_x, select_circle_y + TOP_MENU, 1,BLACK);
     screen.display();
     option_selected--;
   }
@@ -68,15 +70,12 @@ void option_menu_select_up()
 
 void option_menu_select_down()
 {
-    Serial.println("Select down");
     if( select_circle_y <= 14 )
     {
-      Serial.println("Select down");
-      screen.drawCircle(select_circle_x, select_circle_y, 1, WHITE);
+      screen.drawCircle(select_circle_x, select_circle_y + TOP_MENU, 1, WHITE);
       screen.display();
       select_circle_y += TEXT_HEIGHT;
-      Serial.println(select_circle_y,DEC);
-      screen.drawCircle( select_circle_x, select_circle_y, 1,BLACK);
+      screen.drawCircle( select_circle_x, select_circle_y + TOP_MENU, 1,BLACK);
       screen.display();
       option_selected++;
     }
